@@ -31,8 +31,7 @@ function renderDay(id, { updateHash = false, focusTab = false } = {}) {
       <h3>${escape(day.title)}</h3><p>${escape(day.intro)}</p>
       <div class="summary-facts"><div><span>${id === 4 || id === 5 ? '原方案参考里程' : '预计自驾'}</span><strong>${day.distance.join('—')} 公里</strong>${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</div><div><span>${id === 8 ? '目的地' : `今晚住宿 · ${escape(day.stayStatus)}`}</span><strong>${escape(day.stay)}</strong>${day.stayNote ? `<small>${escape(day.stayNote)}</small>` : ''}</div></div>
       <a class="view-day-link" href="#itinerary">查看当天具体安排 <span aria-hidden="true">↓</span></a>
-    </div>
-    <figure class="day-photo"><img src="./assets/autumn-forest.jpg" alt="大兴安岭根河一带的金色秋林与粉色暮空，作为区域秋色参考" width="1400" height="933"><figcaption><span>大兴安岭 · 根河秋色参考</span><a href="./credits.html" target="_blank" rel="noopener noreferrer" aria-label="查看照片作者和许可">图片来源 ↗</a></figcaption></figure>`;
+    </div>`;
   $('#selected-date').textContent = `${day.date} ${day.weekday} · DAY ${String(id).padStart(2, '0')}`;
   $('#day-detail').innerHTML = `
     <div class="timeline-panel"><div class="route-breadcrumb" aria-label="当天路线">${day.route.map(escape).join(' <span aria-hidden="true">→</span> ')}</div><ol class="timeline">${day.schedule.map(([time, title, text]) => `<li><time>${escape(time)}</time><div class="timeline-step"><h3>${escape(title)}</h3><p>${escape(text)}</p></div></li>`).join('')}</ol></div>

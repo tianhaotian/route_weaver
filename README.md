@@ -43,6 +43,6 @@ node scripts/validate.mjs
 
 工作流参考 [GitHub 官方 Pages 文档](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)；地图搜索使用 [高德 URI API](https://developer.amap.com/api/uri-api/guide/search/search)。
 
-## 照片许可
+## 路线图片
 
-照片拍摄于大兴安岭根河湿地附近，作为区域秋色参考，非阿尔山或本路线实拍。摄影 Charlie fong，来自 [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gegengol_in_Greater_Khingan_forest2017.jpg)，遵循 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)。已缩小至 1400 像素宽，卡片中通过 CSS 裁切；图片及其改编版本继续遵循该许可。详见网站 [图片来源页](./docs/credits.html)。
+当前采用路线示意图，不展示风景照片。后续如添加照片，须核实拍摄地点在本次实际路线上，拍摄时间为九月底或十月初，并注明地点、日期、来源与使用许可。

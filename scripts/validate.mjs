@@ -10,7 +10,7 @@ const docs = resolve(root, 'docs');
 for (const name of ['app.mjs', 'trip-data.mjs']) execFileSync(process.execPath, ['--check', resolve(docs, name)]);
 const index = readFileSync(resolve(docs, 'index.html'), 'utf8');
 const app = readFileSync(resolve(docs, 'app.mjs'), 'utf8');
-for (const name of ['index.html', 'credits.html']) {
+for (const name of ['index.html']) {
   const html = readFileSync(resolve(docs, name), 'utf8');
   assert.match(html, /<html lang="zh-CN">/);
   assert.match(html, /name="viewport"/);
