@@ -1,10 +1,44 @@
 import { days, hotelCharging, hotelChargingCheckedAt, stations, preparations, mapUrl, dayFromHash } from './trip-data.mjs?v=hotel-charging-1';
+import { attractions, guidePlans, guideIntro, guideCheckedAt, parkChecks, guideTradeoffs } from './attractions.mjs?v=attraction-guide-1';
 
 const $ = (selector) => document.querySelector(selector);
 const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 let selectedDay = dayFromHash(location.hash) ?? 1;
 const destinationLabels = ['张家口', '东乌旗', '阿尔山', '白狼峰 · 天池', '柴河', '乌兰浩特', '赤峰', '北京'];
 const sourceLinks = (sources) => sources.map(([title, url]) => `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${escape(title)} ↗</a>`).join(' · ');
+const guideLink = (item) => `<a href="#guide-${escape(item.id)}">${escape(item.name)} ↗</a>`;
+
+function dailyGuides(dayId) {
+  const items = attractions.filter((item) => item.days.includes(dayId));
+  if (!items.length) return '';
+  return `<div class="daily-guides"><h3>当天景点攻略</h3><p>看推荐顺序、步行安排和可删减项目。</p><div class="guide-links">${items.map(guideLink).join('')}</div></div>`;
+}
+
+$('#guide-intro').textContent = guideIntro;
+$('#guide-checked-date').textContent = `资料查询：${guideCheckedAt}`;
+$('#guide-index').innerHTML = attractions.map(guideLink).join('');
+$('#guide-plans').innerHTML = guidePlans.map((plan) => `<article class="guide-plan"><span>${escape(plan.label)}</span><h3>${escape(plan.title)}</h3><p>${escape(plan.text)}</p><p class="guide-decision">${escape(plan.decision)}</p><div class="guide-links">${plan.ids.map((id) => guideLink(attractions.find((item) => item.id === id))).join('')}</div></article>`).join('');
+$('#attraction-list').innerHTML = attractions.map((item, i) => `<article class="attraction-card ${escape(item.tone)}" id="guide-${escape(item.id)}" tabindex="-1" aria-labelledby="guide-title-${escape(item.id)}">
+  <div class="attraction-heading"><span class="attraction-number">${String(i + 1).padStart(2, '0')}</span><div><p class="attraction-area">${escape(item.area)} · ${item.days.map((id) => days[id - 1].date).join(' / ')}</p><h3 id="guide-title-${escape(item.id)}">${escape(item.name)}</h3></div><span class="guide-priority">${escape(item.priority)}</span></div>
+  <p class="attraction-reason">${escape(item.reason)}</p><dl class="attraction-facts"><div><dt>建议停留</dt><dd>${escape(item.duration)}</dd></div><div><dt>体力安排</dt><dd>${escape(item.effort)}</dd></div></dl>
+  <details${item.id === 'tuofeng' ? ' open' : ''}><summary>游览顺序 · 拍照 · 取舍 <span aria-hidden="true">＋</span></summary><div class="attraction-body"><h4>建议这样游览</h4><ol>${item.steps.map((step) => `<li>${escape(step)}</li>`).join('')}</ol><h4>观景与拍照</h4><p>${escape(item.photo)}</p><div class="guide-skip"><h4>什么时候减掉或调整</h4><p>${escape(item.skip)}</p></div><h4>交通与位置提醒</h4><p>${escape(item.logistics)}</p><a class="guide-map-link" href="${escape(mapUrl(item.query, item.city))}" target="_blank" rel="noopener noreferrer">高德搜索：${escape(item.query)} ↗</a><p class="guide-map-note">关键词搜索；核对景点、入口和停车点，不作为已确认导航路线。</p><div class="charging-sources">景观 / 位置参考：${sourceLinks(item.sources)}</div></div></details>
+</article>`).join('');
+$('#park-checks').innerHTML = parkChecks.map(([title, text]) => `<li><h4>${escape(title)}</h4><p>${escape(text)}</p></li>`).join('');
+$('#guide-tradeoffs').innerHTML = guideTradeoffs.map(([title, text]) => `<article><h3>${escape(title)}</h3><p>${escape(text)}</p></article>`).join('');
+
+function revealGuide(hash) {
+  const item = attractions.find(({ id }) => hash === `#guide-${id}`);
+  if (!item) return;
+  const card = $(`#guide-${item.id}`);
+  card.querySelector('details').open = true;
+  card.focus({ preventScroll: true });
+  card.scrollIntoView({ block: 'start' });
+}
+// Also reveal a guide if the same anchor is selected again after its details were closed.
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#guide-"]');
+  if (link) revealGuide(link.getAttribute('href'));
+});
 
 function hotelChargeNote(dayId) {
   const item = hotelCharging.find(({ day }) => day === dayId);
@@ -34,7 +68,7 @@ function renderDay(id, { updateHash = false, focusTab = false } = {}) {
     </div>`;
   $('#selected-date').textContent = `${day.date} ${day.weekday} · DAY ${String(id).padStart(2, '0')}`;
   $('#day-detail').innerHTML = `
-    <div class="timeline-panel"><div class="route-breadcrumb" aria-label="当天路线">${day.route.map(escape).join(' <span aria-hidden="true">→</span> ')}</div><ol class="timeline">${day.schedule.map(([time, title, text]) => `<li><time>${escape(time)}</time><div class="timeline-step"><h3>${escape(title)}</h3><p>${escape(text)}</p></div></li>`).join('')}</ol></div>
+    <div class="timeline-panel"><div class="route-breadcrumb" aria-label="当天路线">${day.route.map(escape).join(' <span aria-hidden="true">→</span> ')}</div><ol class="timeline">${day.schedule.map(([time, title, text]) => `<li><time>${escape(time)}</time><div class="timeline-step"><h3>${escape(title)}</h3><p>${escape(text)}</p></div></li>`).join('')}</ol>${dailyGuides(id)}</div>
     <aside class="detail-aside"><div class="daily-charge"><h3>⚡ 当天补电节奏</h3><ol class="charge-route">${day.charge.map(([place, target]) => `<li><span>${escape(place)}</span><strong>${escape(target)}</strong></li>`).join('')}</ol></div>${hotelChargeNote(id)}<div class="condition-note"><span>PLAN WITH ROOM</span><h3>${escape(day.note[0])}</h3><p>${escape(day.note[1])}</p></div><div class="places-panel"><h3>地点与充电线索</h3>${day.places.map(([label, place, city]) => `<a href="${escape(mapUrl(place, city))}" target="_blank" rel="noopener noreferrer"><span><small>${escape(label)}</small>${escape(place)}</span><span aria-hidden="true">↗</span></a>`).join('')}<p class="places-note">高德关键词搜索；出发前核对实际位置与营业状态。</p></div></aside>`;
   $('#previous-day').disabled = id === 1;
   $('#next-day').disabled = id === days.length;
@@ -66,6 +100,7 @@ for (const [selector, direction] of [['#previous-day', -1], ['#next-day', 1]]) {
 window.addEventListener('hashchange', () => {
   const day = dayFromHash(location.hash);
   if (day) renderDay(day);
+  revealGuide(location.hash);
 });
 
 $('#overview-rows').innerHTML = days.map((day) => `<tr><td>${day.date}<small>D${day.id} · ${day.weekday}</small></td><td><button type="button" data-day="${day.id}" aria-label="查看 ${day.date} ${escape(day.short)} 的安排">${escape(day.short)}</button></td><td>${day.distance.join('—')} km${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</td><td>${escape(day.stay)}${day.stayStatus ? `<small>${escape(day.stayStatus)} · ${escape(day.stayNote)}</small>` : ''}</td></tr>`).join('');
@@ -83,3 +118,4 @@ $('#hotel-charging-rows').innerHTML = hotelCharging.map((item) => {
 $('#station-list').innerHTML = stations.map(([area, name, source, note, city]) => `<article class="station-card"><div class="station-top"><span>${escape(area)}</span><span>${escape(source)} · 待确认</span></div><h3>${escape(name)}</h3><p>${escape(note)}</p><a href="${escape(mapUrl(name, city))}" target="_blank" rel="noopener noreferrer" aria-label="在高德搜索 ${escape(name)}">在高德搜索 ↗</a></article>`).join('');
 $('#prep-list').innerHTML = preparations.map(([title, when, text]) => `<li><div><h4>${escape(title)}<span>${escape(when)}</span></h4><p>${escape(text)}</p></div></li>`).join('');
 renderDay(selectedDay);
+revealGuide(location.hash);

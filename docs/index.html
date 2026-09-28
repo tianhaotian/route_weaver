@@ -4,17 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#163e35">
-  <meta name="description" content="北京出发，东乌进、柴河出：9月29日至10月6日阿尔山秋日自驾计划。每日行程、补电、住宿与出发前确认事项。">
+  <meta name="description" content="北京出发，东乌进、柴河出：9月29日至10月6日阿尔山秋日自驾计划。每日行程、核心景点攻略、酒店充电与行前准备。">
   <title>阿尔山 · 秋日环线 | Route Weaver</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css?v=route-only-1">
-  <script type="module" src="./app.mjs?v=route-only-1"></script>
+  <link rel="stylesheet" href="./styles.css?v=attraction-guide-1">
+  <script type="module" src="./app.mjs?v=attraction-guide-1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳至行程</a>
   <header class="site-header">
     <a class="brand" href="#overview" aria-label="Route Weaver 首页"><span class="brand-mark" aria-hidden="true">rw<span>↗</span></span><span>ROUTE WEAVER<small>自 驾 旅 行 手 册</small></span></a>
-    <nav aria-label="主导航"><a href="#overview" class="nav-link">行程总览</a><a href="#itinerary" class="nav-link">每日安排</a><a href="#charging" class="nav-link">补电计划</a><a href="#preparation" class="nav-link">出行准备</a></nav>
+    <nav aria-label="主导航"><a href="#overview" class="nav-link">行程总览</a><a href="#itinerary" class="nav-link">每日安排</a><a href="#attractions" class="nav-link">景点攻略</a><a href="#charging" class="nav-link">补电计划</a><a href="#preparation" class="nav-link">出行准备</a></nav>
     <span class="edition">2026 <span>秋季篇</span></span>
   </header>
   <main id="main">
@@ -61,8 +61,20 @@
       <div class="day-pagination"><button id="previous-day" class="text-button" type="button">← 前一天</button><span id="day-counter"></span><button id="next-day" class="text-button" type="button">后一天 →</button></div>
       <details class="all-days" open><summary>八天住宿与里程总表 <span>＋</span></summary><div class="table-scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">行程</th><th scope="col">里程参考</th><th scope="col">住宿与选择状态</th></tr></thead><tbody id="overview-rows"></tbody></table></div></details>
     </section>
+    <section id="attractions" class="attractions-section" aria-labelledby="attractions-heading">
+      <div class="section-heading"><div><span class="section-no">03</span><h2 id="attractions-heading">核心景点，怎么选、怎么玩</h2></div><span class="muted">为 10/2—10/4 留好时间</span></div>
+      <p id="guide-intro" class="guide-intro"></p>
+      <div class="guide-priorities"><strong>这次最值得保留</strong><p>驼峰岭天池的完整上午 · 蘑阿公路的白天 · 柴河的一处湖景或河谷</p><span>白狼峰看天气，杜鹃湖看余量；游览与取车时间一起算。</span></div>
+      <div id="guide-plans" class="guide-plans"></div>
+      <div class="subheading guide-subheading"><h3>八处景观的具体玩法</h3><span>时长为规划建议 · 交通排队另计</span></div>
+      <nav id="guide-index" class="guide-links" aria-label="景点攻略目录"></nav>
+      <div id="attraction-list" class="attraction-grid"></div>
+      <div class="park-logistics"><div class="subheading"><h3>森林公园：先问清换乘与取车</h3><span>10/2 入园 · 10/3 游完取车</span></div><ol id="park-checks" class="park-checks"></ol></div>
+      <div id="guide-tradeoffs" class="guide-tradeoffs"></div>
+      <p class="guide-source-note"><span id="guide-checked-date"></span>。景观介绍参考政府、媒体及景点资料；个别入口线索来自已注明年份的游客记录，不能代表当前开放或路况。具体玩法与时间取舍按本次行程建议，各景点卡片附来源。<a href="https://github.com/tianhaotian/route_weaver/blob/main/ITINERARY.md#核心景点游览攻略" target="_blank" rel="noopener noreferrer">完整文字版攻略 ↗</a></p>
+    </section>
     <section id="charging" class="charging-section" aria-labelledby="charging-heading">
-      <div class="section-heading"><div><span class="section-no">03</span><h2 id="charging-heading">补电有余量，路上才从容</h2></div><span class="muted">酒店可充时，优先住宿补电</span></div>
+      <div class="section-heading"><div><span class="section-no">04</span><h2 id="charging-heading">补电有余量，路上才从容</h2></div><span class="muted">酒店可充时，优先住宿补电</span></div>
       <div class="charge-principles"><div><span>补电节奏</span><strong>200—250 <small>km</small></strong><p>高速安排一次补电机会<br>同方向准备备用站</p></div><div><span>普通途中目标</span><strong>80%—90%</strong><p>缺少可靠补电的长路段<br>出发前充满并核算余量</p></div><div><span>每次停车预留</span><strong>40—60 <small>min</small></strong><p>吃饭、走动与充电合并<br>排队时间另算</p></div><div class="charge-key"><span>G331 到达目标</span><strong>至少 20%</strong><p>预测持续下降就重新判断<br>途中补电尚未确认</p></div></div>
       <div class="charging-note"><span aria-hidden="true">↗</span><p><strong>酒店有可用桩，就把补电与住宿合并。</strong>店内桩、酒店附近桩和未确认设施分别安排。以下为公开页面核对，未电话确认，不代表入住当晚空闲或可用；交流慢充按过夜时间安排，不套用 40—60 分钟快充窗口。</p></div>
       <div id="hotel-charging" class="hotel-charging-section"><div class="subheading"><h3>已选酒店充电安排</h3><span id="hotel-charging-date"></span></div><p class="hotel-charge-intro">张家口亚朵优先店内充；成悦与全季优先核实并使用所列设施。东乌、柴河及赤峰按店外站点安排；布谷名居确认前不预计可补入电量。各晚目标均以实际能充到的电量为准。</p><div class="table-scroll hotel-charging-scroll"><table class="hotel-charging-table"><caption class="visually-hidden">七晚已选酒店的充电设施证据、补电计划与备用方案</caption><thead><tr><th scope="col">日期</th><th scope="col">酒店与查到的信息</th><th scope="col">当晚安排与备用方案</th></tr></thead><tbody id="hotel-charging-rows"></tbody></table></div></div>
@@ -71,7 +83,7 @@
       <div class="host-questions"><span>联系住宿时，直接问</span><p>桩在酒店内还是附近？支持 YU7 的国标接口吗？交流还是直流、多少千瓦、几把枪？住客如何使用、当晚能否安排、充电及停车费用多少？<strong>请对方发桩照片、准确位置和运营商名称；若是慢充，按实际功率核算整晚能补多少电。</strong></p></div>
     </section>
     <section id="preparation" class="preparation-section" aria-labelledby="preparation-heading">
-      <div class="section-heading"><div><span class="section-no">04</span><h2 id="preparation-heading">出发前，逐项落实</h2></div><span class="muted">天气 · 票务 · 住宿 · 装备</span></div>
+      <div class="section-heading"><div><span class="section-no">05</span><h2 id="preparation-heading">出发前，逐项落实</h2></div><span class="muted">天气 · 票务 · 住宿 · 装备</span></div>
       <div class="prep-layout"><div><div class="subheading"><h3>六件优先确认的事</h3><span>建议出发前逐项联系确认</span></div><ol id="prep-list" class="prep-list"></ol></div>
       <aside class="weather-card"><div class="subheading"><h3>按零下的早晚准备</h3><span class="pill">非实时天气</span></div><p>原方案所列阿尔山市区预报，标注查询日为 9 月 28 日、来源为中国天气网；本页未重新核验，也不代表山顶或柴河天气。</p><div class="weather-days"><div><span>9/30</span><b>中雪转晴</b><strong>−6° / 3°</strong></div><div><span>10/1</span><b>雨夹雪转晴</b><strong>−5° / 3°</strong></div><div><span>10/2</span><b>多云</b><strong>−4° / 8°</strong></div><div><span>10/3</span><b>多云转晴</b><strong>−4° / 11°</strong></div></div><p class="weather-warning">临近出行再次查询；降雪不等于一定封路，仍需关注积雪、结冰及实际通行。</p><a class="external-link" href="https://www.weather.com.cn/" target="_blank" rel="noopener noreferrer">前往中国天气网查询 ↗</a></aside></div>
       <div class="practical-grid"><details open><summary>门票与景区交通 <span>＋</span></summary><div class="details-body"><div class="budget"><span>两大景区门票及接驳预留</span><strong>¥400—450 <small>/ 成人</small></strong></div><dl class="prices"><div><dt>森林公园成人门票</dt><dd>¥180 起</dd></div><div><dt>森林公园门票＋观光车</dt><dd>¥275 起</dd></div><div><dt>单独观光车</dt><dd>¥105</dd></div><div><dt>白狼峰门票</dt><dd>参考 ¥80</dd></div><div><dt>白狼峰接驳</dt><dd>历史约 ¥50</dd></div><div><dt>柴河当地观景点</dt><dd>现场公示为准</dd></div></dl><p class="small-note">森林公园为原方案 9/28 平台展示价，未锁定 10/2 订单；白狼峰来自游客记录。本页未核验现价，停车及额外项目另算，注意套餐避免重复购票。</p></div></details>

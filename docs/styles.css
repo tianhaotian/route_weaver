@@ -33,3 +33,42 @@
 .backup-heading{margin-top:28px}
 @media(max-width:760px){.hotel-charge-note{padding:19px 20px}.hotel-charging-scroll{margin:0 -4px}.hotel-charging-table{min-width:670px}.hotel-charging-table td{padding:16px 14px}.hotel-charge-intro{font-size:13px}.hotel-charging-section>.subheading{flex-wrap:wrap;gap:7px}.backup-heading{margin-top:23px}}
 @media print{.hotel-charging-table{min-width:0}.hotel-charging-table td{padding:10px}.hotel-charge-note,.hotel-charging-table tr{break-inside:avoid}.backup-link,.hotel-charge-more{display:none}}
+
+/* Route-specific attraction guides. */
+.attractions-section{padding-top:48px}
+.guide-intro{font-size:15px;color:var(--muted);line-height:1.9;max-width:970px;margin-bottom:21px}
+.guide-priorities{border-left:4px solid var(--gold);background:var(--forest);border-radius:0 var(--radius) var(--radius) 0;padding:22px 26px;color:#fff}
+.guide-priorities strong{font-size:13px;color:#f1ce7d;letter-spacing:1px}.guide-priorities p{font-size:20px;line-height:1.75;margin:6px 0}.guide-priorities>span{font-size:13px;color:#d5e2d9}
+.guide-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:20px}
+.guide-plan{padding:23px;background:#fff;border:1px solid var(--line);border-radius:var(--radius)}
+.guide-plan>span{font-size:12px;letter-spacing:.5px;color:var(--green);font-weight:650}.guide-plan h3{font-size:18px;margin:10px 0 14px}
+.guide-plan p{font-size:14px;color:var(--muted);line-height:1.9}.guide-plan .guide-decision{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);color:var(--ink)}
+.guide-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.guide-links a{display:inline-block;padding:6px 11px;font-size:13px;color:var(--green);background:var(--soft);border:1px solid #d4dfd4;border-radius:5px;line-height:1.7}
+.guide-links a:hover{background:#e0eade;border-color:#9db7a4}
+.guide-subheading{margin-top:32px;margin-bottom:0}
+.attraction-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start;margin-top:20px}
+.attraction-card{border:1px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden;scroll-margin-top:24px}
+.attraction-card.primary{border-top:3px solid var(--green)}.attraction-card.conditional{border-top:3px solid var(--gold)}
+.attraction-card:target{outline:2px solid #8ca48e;outline-offset:4px}
+.attraction-heading{display:flex;align-items:center;gap:13px;padding:24px 24px 0;flex-wrap:wrap}.attraction-number{font:26px Georgia,serif;color:#8a9d89}
+.attraction-heading>div{flex:1;min-width:150px}.attraction-area{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:3px}.attraction-heading h3{font-size:23px;font-weight:600}
+.guide-priority{font-size:11px;color:var(--green);background:var(--soft);padding:4px 8px;border-radius:4px}.conditional .guide-priority{color:#7d5c24;background:var(--amber)}
+.attraction-reason{font-size:15px;line-height:1.9;padding:18px 24px 0;color:var(--muted)}
+.attraction-facts{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin:20px 24px;padding:15px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.attraction-facts dt{font-size:11px;color:var(--muted);margin-bottom:5px}.attraction-facts dd{font-size:14px;margin:0;line-height:1.8;font-weight:550}
+.attraction-card summary{font-size:14px;padding:0 24px 21px;color:var(--green)}.attraction-card details[open] summary{padding-bottom:15px}
+.attraction-body{padding:0 24px 24px}.attraction-body h4{font-size:14px;margin:17px 0 6px}.attraction-body h4:first-child{margin-top:0}
+.attraction-body p,.attraction-body li{font-size:15px;line-height:1.95;color:var(--muted)}.attraction-body ol{padding-left:20px;margin:8px 0 18px}.attraction-body li{padding-left:3px;margin-bottom:9px}.attraction-body li::marker{color:var(--green)}
+.guide-skip{background:var(--amber);border-radius:6px;padding:15px 17px;margin:18px 0}.guide-skip h4{color:#755018}.guide-skip p{font-size:14px;color:#786348}
+.guide-map-link{display:inline-block;margin-top:17px;font-size:13px;color:var(--green);text-decoration:underline;text-underline-offset:3px}.attraction-body .guide-map-note{font-size:11px;margin-top:7px}
+.park-logistics{padding:25px;margin-top:25px;background:var(--soft);border:1px solid var(--line);border-radius:var(--radius)}
+.park-checks{display:grid;grid-template-columns:1fr 1fr;gap:20px 30px;list-style:none;counter-reset:park;margin:0;padding:0}
+.park-checks li{counter-increment:park;position:relative;padding-left:32px}.park-checks li:before{content:counter(park,decimal-leading-zero);position:absolute;left:0;top:1px;font:16px Georgia,serif;color:#798d77}
+.park-checks h4{font-size:15px;margin:0 0 7px}.park-checks p{font-size:14px;line-height:1.9;color:var(--muted)}
+.guide-tradeoffs{margin-top:25px}.guide-tradeoffs article{display:grid;grid-template-columns:200px 1fr;gap:25px;padding:18px 0;border-bottom:1px solid var(--line)}.guide-tradeoffs h3{font-size:15px;line-height:1.9;color:var(--green)}.guide-tradeoffs p{font-size:14px;line-height:1.9;color:var(--muted)}
+.guide-source-note{font-size:12px;line-height:1.9;color:var(--muted);margin-top:20px}.guide-source-note a{color:var(--green);text-decoration:underline;text-underline-offset:3px}
+.daily-guides{margin-top:25px;padding-top:21px;border-top:1px solid var(--line)}.daily-guides h3{font-size:16px}.daily-guides p{font-size:13px;color:var(--muted);margin-top:6px}.daily-guides .guide-links{margin-top:13px}
+@media(max-width:1100px){.site-header nav{gap:17px}.nav-link{white-space:nowrap}.guide-plans{gap:12px}.guide-plan{padding:19px}.guide-plan h3{font-size:17px}.attraction-heading{gap:10px}}
+@media(max-width:760px){.attractions-section{padding-top:34px}.site-header nav{gap:9px}.guide-intro{font-size:14px}.guide-priorities{padding:20px}.guide-priorities p{font-size:18px}.guide-plans,.attraction-grid{grid-template-columns:1fr;gap:15px}.guide-plan{padding:21px}.guide-plan p{font-size:15px}.guide-subheading{align-items:flex-start;flex-wrap:wrap;gap:5px;margin-top:27px}.guide-links{gap:8px;margin-top:14px}.guide-links a{padding:8px 10px}.attraction-heading{padding:21px 20px 0}.attraction-heading h3{font-size:21px}.attraction-heading>div{min-width:130px}.attraction-reason{padding:17px 20px 0}.attraction-facts{margin:19px 20px}.attraction-card summary{padding:0 20px 20px}.attraction-body{padding:0 20px 22px}.attraction-body p,.attraction-body li{font-size:16px}.guide-skip p{font-size:15px}.park-logistics{padding:22px 20px}.park-logistics .subheading{flex-wrap:wrap;gap:6px}.park-checks{grid-template-columns:1fr;gap:20px}.park-checks p{font-size:15px}.guide-tradeoffs article{grid-template-columns:1fr;gap:7px}.guide-tradeoffs p{font-size:15px}}
+@media print{.attractions-section{padding-top:25px}.guide-plans{grid-template-columns:1fr}.guide-plan,.attraction-card{break-inside:avoid}.attraction-grid{display:block}.attraction-card{margin-bottom:18px}.guide-priorities{background:white;color:var(--ink);border:1px solid var(--line)}.guide-priorities strong,.guide-priorities>span{color:var(--ink)}.guide-links,.guide-map-link,.guide-map-note,.daily-guides{display:none}.park-checks{grid-template-columns:1fr}.guide-tradeoffs article{grid-template-columns:160px 1fr}}

@@ -4,10 +4,11 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
 import { days, stations, preparations, mapUrl, dayFromHash } from '../docs/trip-data.mjs';
+import { attractions, guidePlans, parkChecks } from '../docs/attractions.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const docs = resolve(root, 'docs');
-for (const name of ['app.mjs', 'trip-data.mjs']) execFileSync(process.execPath, ['--check', resolve(docs, name)]);
+for (const name of ['app.mjs', 'trip-data.mjs', 'attractions.mjs']) execFileSync(process.execPath, ['--check', resolve(docs, name)]);
 const index = readFileSync(resolve(docs, 'index.html'), 'utf8');
 const app = readFileSync(resolve(docs, 'app.mjs'), 'utf8');
 for (const name of ['index.html']) {
@@ -20,6 +21,7 @@ for (const name of ['index.html']) {
   for (const [, id] of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(id), `${name}: unknown anchor ${id}`);
 }
 for (const [, path] of app.matchAll(/src="(\.\/[^"#]+)"/g)) assert.ok(existsSync(resolve(docs, path)), `app: missing ${path}`);
+for (const [, path] of app.matchAll(/from '(\.\/[^']+)'/g)) assert.ok(existsSync(resolve(docs, path.split('?')[0])), `app: missing import ${path}`);
 for (const [, id] of app.matchAll(/\$\('#([a-z-]+)'\)/g)) assert.ok(index.includes(`id="${id}"`), `app: missing mount ${id}`);
 assert.equal(days.length, 8);
 assert.deepEqual(days.map(({ id }) => id), [1, 2, 3, 4, 5, 6, 7, 8]);
@@ -46,6 +48,18 @@ assert.equal(dayFromHash('#day-1<script>'), null);
 assert.ok(days[3].route.indexOf('白狼峰') < days[3].route.indexOf('阿尔山国家森林公园'));
 assert.equal(stations.length, 9);
 assert.equal(preparations.length, 6);
+const guideIds = attractions.map(({ id }) => id);
+assert.equal(guideIds.length, new Set(guideIds).size, 'duplicate attraction anchor');
+for (const guide of attractions) {
+  assert.ok(guide.days.every((day) => days.some(({ id }) => id === day)), `${guide.name}: unknown day`);
+  assert.ok(guide.sources.length, `${guide.name}: missing sources`);
+  for (const [, source] of guide.sources) assert.equal(new URL(source).protocol, 'https:');
+  assert.equal(new URL(mapUrl(guide.query, guide.city)).searchParams.get('keyword'), guide.query);
+}
+for (const plan of guidePlans) {
+  for (const id of plan.ids) assert.ok(attractions.some((guide) => guide.id === id && guide.days.includes(plan.day)), `guide plan ${plan.day}: invalid attraction ${id}`);
+}
+assert.equal(parkChecks.length, 4);
 assert.ok(existsSync(resolve(root, 'ITINERARY.md')));
 assert.ok(existsSync(resolve(docs, '.nojekyll')));
-console.log('Validated: 8 consecutive itinerary days, 2,970–3,350 km, 9 station leads, 6 preparation items, JS syntax, local assets, anchors, and map links.');
+console.log(`Validated: 8 itinerary days, 2,970–3,350 km, 9 station leads, ${attractions.length} sourced attraction guides, daily guide links, JS syntax, assets, anchors, and map links.`);
