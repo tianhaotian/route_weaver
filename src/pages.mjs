@@ -73,7 +73,7 @@ function home() {
     <section aria-labelledby="home-days"><div class="section-heading"><h2 id="home-days">按日期出发</h2><a href="./itinerary.html">八日行程与住宿 →</a></div>${dayNav(0)}</section>
     <div class="home-layout"><section class="home-entries" aria-label="常用入口">${[
       ['itinerary', '每天怎么走', '路线、时间安排与七晚已选酒店'],
-      ['attractions', '核心景点怎么玩', '八处景观的推荐、顺序与取舍'],
+      ['attractions', '核心景点怎么玩', `${attractions.length} 处景观的推荐、顺序与取舍`],
       ['charging', '今晚在哪里充电', '酒店设施证据与沿途备用站'],
       ['preparation', '出发前看一眼', '待确认事项、天气、门票与行李'],
     ].map(([id, title, text]) => { const item = primaryPages.find((item) => item.id === id); return `<a class="entry-card" href="./${item.file}">${icon(item.icon)}<span><strong>${title}</strong><small>${text}</small></span><span class="entry-arrow" aria-hidden="true">→</span></a>`; }).join('')}</section>
@@ -106,8 +106,8 @@ function dayPage(d) {
 }
 
 function attractionList() {
-  return layout({ page: 'attractions', title: '核心景点攻略', subtitle: '驼峰岭天池优先，蘑阿公路留给白天，柴河按时间选一处。', body: `
-    <nav class="filter-nav" aria-label="按游览日期筛选"><a href="./attractions.html" data-guide-filter="all" aria-current="true">全部 8 处</a>${guidePlans.map((plan) => `<a href="./attractions.html?day=${plan.day}" data-guide-filter="${plan.day}">${days[plan.day - 1].date}</a>`).join('')}</nav>
+  return layout({ page: 'attractions', title: '核心景点攻略', subtitle: '10/2 看不冻河与沿途湖景，10/3 驼峰岭天池优先，蘑阿公路留给白天。', body: `
+    <nav class="filter-nav" aria-label="按游览日期筛选"><a href="./attractions.html" data-guide-filter="all" aria-current="true">全部 ${attractions.length} 处</a>${guidePlans.map((plan) => `<a href="./attractions.html?day=${plan.day}" data-guide-filter="${plan.day}">${days[plan.day - 1].date}</a>`).join('')}</nav>
     <div class="compact-plans">${guidePlans.map((plan) => `<details class="panel" data-plan-day="${plan.day}"><summary>${escape(plan.label)} · 怎么取舍 <span aria-hidden="true">＋</span></summary><div class="details-body"><h2>${escape(plan.title)}</h2><p>${escape(plan.text)}</p><p class="inline-note">${escape(plan.decision)}</p><a class="text-link" href="./day-${plan.day}.html">查看当天完整安排 →</a></div></details>`).join('')}</div>
     <div class="guide-directory">${attractions.map((item, index) => `<article class="guide-card ${item.tone}" id="guide-${item.id}" data-guide-days="${item.days.join(',')}"><a data-guide-link href="./guide-${item.id}.html"><div class="card-top"><span class="guide-number">${String(index + 1).padStart(2, '0')}</span>${badge(item.priority, item.tone)}</div><small>${escape(item.area)} · ${item.days.map((id) => days[id - 1].date).join(' / ')}</small><h2>${escape(item.name)}</h2><p>${escape(item.reason)}</p><div class="guide-card-bottom"><span>${escape(item.duration)}</span><strong>查看攻略 →</strong></div></a></article>`).join('')}</div>
     <details class="panel guide-notes"><summary>季节、路线与天气取舍 <span aria-hidden="true">＋</span></summary><div class="details-body"><p>${escape(guideIntro)}</p>${guideTradeoffs.map(([title, text]) => `<h3>${escape(title)}</h3><p>${escape(text)}</p>`).join('')}</div></details>${sourceNote}` });

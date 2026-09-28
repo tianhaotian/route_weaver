@@ -14,7 +14,7 @@ for (const file of ['docs/app.mjs', 'docs/navigation.mjs', 'docs/trip-data.mjs',
   execFileSync(process.execPath, ['--check', resolve(root, file)]);
 }
 const pages = renderPages();
-assert.equal(pages.size, 21);
+assert.equal(pages.size, primaryPages.length + days.length + attractions.length);
 assert.deepEqual(readdirSync(docs).filter((file) => file.endsWith('.html')).sort(), [...pages.keys()].sort());
 const idsByPage = new Map();
 const titles = new Set();
@@ -78,7 +78,7 @@ assert.equal(stations.length, 9);
 assert.equal(preparations.length, 6);
 assert.ok(days[3].route.indexOf('白狼峰') < days[3].route.indexOf('阿尔山国家森林公园'));
 const guideIds = attractions.map(({ id }) => id);
-assert.equal(new Set(guideIds).size, 8);
+assert.equal(new Set(guideIds).size, attractions.length);
 for (const guide of attractions) {
   assert.equal(legacyTarget(`#guide-${guide.id}`, guideIds), `./guide-${guide.id}.html`);
   assert.ok(pages.get(`guide-${guide.id}.html`).includes(guide.name));
@@ -94,4 +94,4 @@ assert.equal(legacyTarget('#guide-unknown', guideIds), null);
 assert.equal(legacyTarget('#day-9', guideIds), null);
 assert.equal(legacyTarget('#charging', guideIds), './charging.html');
 assert.ok(existsSync(resolve(docs, '.nojekyll')));
-console.log(`Validated ${pages.size} static pages, ${linkCount} local links, return destinations, legacy links, 8 days, 7 hotels, and 8 attraction guides.`);
+console.log(`Validated ${pages.size} static pages, ${linkCount} local links, return destinations, legacy links, 8 days, 7 hotels, and ${attractions.length} attraction guides.`);
