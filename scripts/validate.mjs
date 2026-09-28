@@ -16,7 +16,7 @@ for (const name of ['index.html', 'credits.html']) {
   assert.match(html, /name="viewport"/);
   const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
   assert.equal(ids.length, new Set(ids).size, `${name}: duplicate id`);
-  for (const [, path] of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)) assert.ok(existsSync(resolve(docs, path)), `${name}: missing ${path}`);
+  for (const [, path] of html.matchAll(/(?:src|href)="(\.\/[^"#]+)"/g)) assert.ok(existsSync(resolve(docs, path.split('?')[0])), `${name}: missing ${path}`);
   for (const [, id] of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids.includes(id), `${name}: unknown anchor ${id}`);
 }
 for (const [, path] of app.matchAll(/src="(\.\/[^"#]+)"/g)) assert.ok(existsSync(resolve(docs, path)), `app: missing ${path}`);

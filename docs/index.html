@@ -7,8 +7,8 @@
   <meta name="description" content="北京出发，东乌进、柴河出：9月29日至10月6日阿尔山秋日自驾计划。每日行程、补电、住宿与出发前确认事项。">
   <title>阿尔山 · 秋日环线 | Route Weaver</title>
   <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./styles.css">
-  <script type="module" src="./app.mjs"></script>
+  <link rel="stylesheet" href="./styles.css?v=hotel-charging-1">
+  <script type="module" src="./app.mjs?v=hotel-charging-1"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">跳至行程</a>
@@ -62,11 +62,13 @@
       <details class="all-days" open><summary>八天住宿与里程总表 <span>＋</span></summary><div class="table-scroll"><table><thead><tr><th scope="col">日期</th><th scope="col">行程</th><th scope="col">里程参考</th><th scope="col">住宿与选择状态</th></tr></thead><tbody id="overview-rows"></tbody></table></div></details>
     </section>
     <section id="charging" class="charging-section" aria-labelledby="charging-heading">
-      <div class="section-heading"><div><span class="section-no">03</span><h2 id="charging-heading">补电有余量，路上才从容</h2></div><span class="muted">站点线索均需出发前确认</span></div>
+      <div class="section-heading"><div><span class="section-no">03</span><h2 id="charging-heading">补电有余量，路上才从容</h2></div><span class="muted">酒店可充时，优先住宿补电</span></div>
       <div class="charge-principles"><div><span>补电节奏</span><strong>200—250 <small>km</small></strong><p>高速安排一次补电机会<br>同方向准备备用站</p></div><div><span>普通途中目标</span><strong>80%—90%</strong><p>缺少可靠补电的长路段<br>出发前充满并核算余量</p></div><div><span>每次停车预留</span><strong>40—60 <small>min</small></strong><p>吃饭、走动与充电合并<br>排队时间另算</p></div><div class="charge-key"><span>G331 到达目标</span><strong>至少 20%</strong><p>预测持续下降就重新判断<br>途中补电尚未确认</p></div></div>
-      <div class="charging-note"><span aria-hidden="true">↗</span><p><strong>先确认站点，再确定走法。</strong>以下为原方案中的地图、历史车主和酒店页面线索，不代表实时营业、功率或空闲。已选酒店的充电条件需单独核实；其他酒店仅保留为充电线索，使用前确认是否接待非住客。不要用车辆最高充电能力推算当地速度。</p></div>
+      <div class="charging-note"><span aria-hidden="true">↗</span><p><strong>酒店有可用桩，就把补电与住宿合并。</strong>店内桩、酒店附近桩和未确认设施分别安排。以下为公开页面核对，未电话确认，不代表入住当晚空闲或可用；交流慢充按过夜时间安排，不套用 40—60 分钟快充窗口。</p></div>
+      <div id="hotel-charging" class="hotel-charging-section"><div class="subheading"><h3>已选酒店充电安排</h3><span id="hotel-charging-date"></span></div><p class="hotel-charge-intro">张家口亚朵优先店内充；成悦与全季优先核实并使用所列设施。东乌、柴河及赤峰按店外站点安排；布谷名居确认前不预计可补入电量。各晚目标均以实际能充到的电量为准。</p><div class="table-scroll hotel-charging-scroll"><table class="hotel-charging-table"><caption class="visually-hidden">七晚已选酒店的充电设施证据、补电计划与备用方案</caption><thead><tr><th scope="col">日期</th><th scope="col">酒店与查到的信息</th><th scope="col">当晚安排与备用方案</th></tr></thead><tbody id="hotel-charging-rows"></tbody></table></div></div>
+      <div class="subheading backup-heading"><h3>途中与备用充电线索</h3><span>原方案线索 · 可用性待核实</span></div><p class="hotel-charge-intro">以下历史记录与地图、酒店页面线索未代表实时营业或功率。其他酒店需先确认非住客能否使用；地图搜索不保证找到的站点当日可用。</p>
       <div id="station-list" class="station-grid"></div>
-      <div class="host-questions"><span>联系住宿时，直接问</span><p>交流还是直流？多少千瓦、几把枪？是否对住客开放？当晚能否安排、费用多少？<strong>请对方发桩照片和运营商名称。</strong></p></div>
+      <div class="host-questions"><span>联系住宿时，直接问</span><p>桩在酒店内还是附近？支持 YU7 的国标接口吗？交流还是直流、多少千瓦、几把枪？住客如何使用、当晚能否安排、充电及停车费用多少？<strong>请对方发桩照片、准确位置和运营商名称；若是慢充，按实际功率核算整晚能补多少电。</strong></p></div>
     </section>
     <section id="preparation" class="preparation-section" aria-labelledby="preparation-heading">
       <div class="section-heading"><div><span class="section-no">04</span><h2 id="preparation-heading">出发前，逐项落实</h2></div><span class="muted">天气 · 票务 · 住宿 · 装备</span></div>
