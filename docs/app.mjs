@@ -1,121 +1,95 @@
-import { days, hotelCharging, hotelChargingCheckedAt, stations, preparations, mapUrl, dayFromHash } from './trip-data.mjs?v=hotel-charging-1';
-import { attractions, guidePlans, guideIntro, guideCheckedAt, parkChecks, guideTradeoffs } from './attractions.mjs?v=attraction-guide-1';
+import { returnTarget, legacyTarget } from './navigation.mjs?v=mobile-pages-1';
 
-const $ = (selector) => document.querySelector(selector);
-const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-let selectedDay = dayFromHash(location.hash) ?? 1;
-const destinationLabels = ['张家口', '东乌旗', '阿尔山', '白狼峰 · 天池', '柴河', '乌兰浩特', '赤峰', '北京'];
-const sourceLinks = (sources) => sources.map(([title, url]) => `<a href="${escape(url)}" target="_blank" rel="noopener noreferrer">${escape(title)} ↗</a>`).join(' · ');
-const guideLink = (item) => `<a href="#guide-${escape(item.id)}">${escape(item.name)} ↗</a>`;
+const body = document.body;
+const page = body.dataset.page;
 
-function dailyGuides(dayId) {
-  const items = attractions.filter((item) => item.days.includes(dayId));
-  if (!items.length) return '';
-  return `<div class="daily-guides"><h3>当天景点攻略</h3><p>看推荐顺序、步行安排和可删减项目。</p><div class="guide-links">${items.map(guideLink).join('')}</div></div>`;
-}
-
-$('#guide-intro').textContent = guideIntro;
-$('#guide-checked-date').textContent = `资料查询：${guideCheckedAt}`;
-$('#guide-index').innerHTML = attractions.map(guideLink).join('');
-$('#guide-plans').innerHTML = guidePlans.map((plan) => `<article class="guide-plan"><span>${escape(plan.label)}</span><h3>${escape(plan.title)}</h3><p>${escape(plan.text)}</p><p class="guide-decision">${escape(plan.decision)}</p><div class="guide-links">${plan.ids.map((id) => guideLink(attractions.find((item) => item.id === id))).join('')}</div></article>`).join('');
-$('#attraction-list').innerHTML = attractions.map((item, i) => `<article class="attraction-card ${escape(item.tone)}" id="guide-${escape(item.id)}" tabindex="-1" aria-labelledby="guide-title-${escape(item.id)}">
-  <div class="attraction-heading"><span class="attraction-number">${String(i + 1).padStart(2, '0')}</span><div><p class="attraction-area">${escape(item.area)} · ${item.days.map((id) => days[id - 1].date).join(' / ')}</p><h3 id="guide-title-${escape(item.id)}">${escape(item.name)}</h3></div><span class="guide-priority">${escape(item.priority)}</span></div>
-  <p class="attraction-reason">${escape(item.reason)}</p><dl class="attraction-facts"><div><dt>建议停留</dt><dd>${escape(item.duration)}</dd></div><div><dt>体力安排</dt><dd>${escape(item.effort)}</dd></div></dl>
-  <details${item.id === 'tuofeng' ? ' open' : ''}><summary>游览顺序 · 拍照 · 取舍 <span aria-hidden="true">＋</span></summary><div class="attraction-body"><h4>建议这样游览</h4><ol>${item.steps.map((step) => `<li>${escape(step)}</li>`).join('')}</ol><h4>观景与拍照</h4><p>${escape(item.photo)}</p><div class="guide-skip"><h4>什么时候减掉或调整</h4><p>${escape(item.skip)}</p></div><h4>交通与位置提醒</h4><p>${escape(item.logistics)}</p><a class="guide-map-link" href="${escape(mapUrl(item.query, item.city))}" target="_blank" rel="noopener noreferrer">高德搜索：${escape(item.query)} ↗</a><p class="guide-map-note">关键词搜索；核对景点、入口和停车点，不作为已确认导航路线。</p><div class="charging-sources">景观 / 位置参考：${sourceLinks(item.sources)}</div></div></details>
-</article>`).join('');
-$('#park-checks').innerHTML = parkChecks.map(([title, text]) => `<li><h4>${escape(title)}</h4><p>${escape(text)}</p></li>`).join('');
-$('#guide-tradeoffs').innerHTML = guideTradeoffs.map(([title, text]) => `<article><h3>${escape(title)}</h3><p>${escape(text)}</p></article>`).join('');
-
-function revealGuide(hash) {
-  const item = attractions.find(({ id }) => hash === `#guide-${id}`);
-  if (!item) return;
-  const card = $(`#guide-${item.id}`);
-  card.querySelector('details').open = true;
-  card.focus({ preventScroll: true });
-  card.scrollIntoView({ block: 'start' });
-}
-// Also reveal a guide if the same anchor is selected again after its details were closed.
-document.addEventListener('click', (event) => {
-  const link = event.target.closest('a[href^="#guide-"]');
-  if (link) revealGuide(link.getAttribute('href'));
-});
-
-function hotelChargeNote(dayId) {
-  const item = hotelCharging.find(({ day }) => day === dayId);
-  if (!item) return '';
-  return `<div class="hotel-charge-note ${escape(item.tone)}"><h3>住宿充电 · ${escape(item.status)}</h3><p>${escape(item.plan)}</p><p class="charge-evidence">${escape(item.evidence)}</p><div class="charging-sources">${sourceLinks(item.sources)}</div><a class="hotel-charge-more" href="#hotel-charging">查看酒店充电总表与备用方案 ↓</a></div>`;
-}
-
-$('#day-tabs').innerHTML = days.map((day) => `<button type="button" class="day-tab" id="tab-${day.id}" role="tab" aria-controls="day-summary" aria-selected="false" tabindex="-1" data-day="${day.id}"><span class="day-number">DAY ${String(day.id).padStart(2, '0')}</span><strong>${day.date}</strong><small>${day.weekday}</small><span class="day-place">${destinationLabels[day.id - 1]}</span></button>`).join('');
-
-function renderDay(id, { updateHash = false, focusTab = false } = {}) {
-  const day = days.find((item) => item.id === id);
-  if (!day) return;
-  selectedDay = id;
-  document.querySelectorAll('[role="tab"]').forEach((tab) => {
-    const active = Number(tab.dataset.day) === id;
-    tab.setAttribute('aria-selected', String(active));
-    tab.tabIndex = active ? 0 : -1;
-  });
-  document.querySelectorAll('[data-segment]').forEach((segment) => segment.classList.toggle('is-selected', Number(segment.dataset.segment) === id));
-  $('#day-summary').setAttribute('aria-labelledby', `tab-${id}`);
-  $('#day-summary').innerHTML = `
-    <div class="summary-content">
-      <div class="summary-top"><span class="day-badge">DAY ${String(id).padStart(2, '0')} / ${day.date}</span><span class="pill ${day.type}">${escape(day.tag)}</span></div>
-      <h3>${escape(day.title)}</h3><p>${escape(day.intro)}</p>
-      <div class="summary-facts"><div><span>${id === 4 || id === 5 ? '原方案参考里程' : '预计自驾'}</span><strong>${day.distance.join('—')} 公里</strong>${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</div><div><span>${id === 8 ? '目的地' : `今晚住宿 · ${escape(day.stayStatus)}`}</span><strong>${escape(day.stay)}</strong>${day.stayNote ? `<small>${escape(day.stayNote)}</small>` : ''}</div></div>
-      <a class="view-day-link" href="#itinerary">查看当天具体安排 <span aria-hidden="true">↓</span></a>
-    </div>`;
-  $('#selected-date').textContent = `${day.date} ${day.weekday} · DAY ${String(id).padStart(2, '0')}`;
-  $('#day-detail').innerHTML = `
-    <div class="timeline-panel"><div class="route-breadcrumb" aria-label="当天路线">${day.route.map(escape).join(' <span aria-hidden="true">→</span> ')}</div><ol class="timeline">${day.schedule.map(([time, title, text]) => `<li><time>${escape(time)}</time><div class="timeline-step"><h3>${escape(title)}</h3><p>${escape(text)}</p></div></li>`).join('')}</ol>${dailyGuides(id)}</div>
-    <aside class="detail-aside"><div class="daily-charge"><h3>⚡ 当天补电节奏</h3><ol class="charge-route">${day.charge.map(([place, target]) => `<li><span>${escape(place)}</span><strong>${escape(target)}</strong></li>`).join('')}</ol></div>${hotelChargeNote(id)}<div class="condition-note"><span>PLAN WITH ROOM</span><h3>${escape(day.note[0])}</h3><p>${escape(day.note[1])}</p></div><div class="places-panel"><h3>地点与充电线索</h3>${day.places.map(([label, place, city]) => `<a href="${escape(mapUrl(place, city))}" target="_blank" rel="noopener noreferrer"><span><small>${escape(label)}</small>${escape(place)}</span><span aria-hidden="true">↗</span></a>`).join('')}<p class="places-note">高德关键词搜索；出发前核对实际位置与营业状态。</p></div></aside>`;
-  $('#previous-day').disabled = id === 1;
-  $('#next-day').disabled = id === days.length;
-  $('#day-counter').textContent = `DAY ${String(id).padStart(2, '0')} / 08`;
-  if (updateHash) history.replaceState(null, '', `#day-${id}`);
-  if (focusTab) {
-    const tab = $(`#tab-${id}`);
-    tab.focus({ preventScroll: true });
-    tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' });
+function initNavigation() {
+  if (page === 'overview') {
+    const redirectLegacy = () => {
+      const target = legacyTarget(location.hash, (body.dataset.guideIds ?? '').split(','));
+      if (target) location.replace(target);
+      return Boolean(target);
+    };
+    if (redirectLegacy()) return false;
+    window.addEventListener('hashchange', redirectLegacy);
   }
+  if (page !== 'overview') {
+    const search = page === 'day' ? `?day=${body.dataset.day}` : location.search;
+    const target = returnTarget(page, search, body.dataset.guide);
+    document.querySelectorAll('[data-context-back]').forEach((link) => {
+      link.setAttribute('href', target.href);
+      link.setAttribute('aria-label', target.label);
+      const label = link.querySelector('[data-back-label]');
+      if (label) label.textContent = target.label;
+    });
+  }
+  const menu = document.querySelector('#site-menu');
+  const trigger = document.querySelector('.menu-button');
+  if (typeof menu.showModal === 'function') {
+    trigger.hidden = false;
+    trigger.addEventListener('click', () => {
+      menu.showModal();
+      trigger.setAttribute('aria-expanded', 'true');
+      document.documentElement.classList.add('menu-is-open');
+    });
+    menu.querySelector('.menu-close').addEventListener('click', () => menu.close());
+    menu.addEventListener('click', (event) => {
+      if (event.target === menu || event.target.closest('a')) menu.close();
+    });
+    menu.addEventListener('close', () => {
+      trigger.setAttribute('aria-expanded', 'false');
+      document.documentElement.classList.remove('menu-is-open');
+    });
+  }
+  const map = document.querySelector('.map-fold');
+  if (map && matchMedia('(max-width: 760px)').matches) map.open = false;
+  return true;
 }
 
-$('#day-tabs').addEventListener('click', (event) => {
-  const tab = event.target.closest('[data-day]');
-  if (tab) renderDay(Number(tab.dataset.day), { updateHash: true });
-});
-$('#day-tabs').addEventListener('keydown', (event) => {
-  const movement = { ArrowRight: selectedDay === 8 ? 1 : selectedDay + 1, ArrowLeft: selectedDay === 1 ? 8 : selectedDay - 1, Home: 1, End: 8 };
-  if (!(event.key in movement)) return;
-  event.preventDefault();
-  renderDay(movement[event.key], { updateHash: true, focusTab: true });
-});
-for (const [selector, direction] of [['#previous-day', -1], ['#next-day', 1]]) {
-  $(selector).addEventListener('click', () => {
-    renderDay(selectedDay + direction, { updateHash: true });
-    $('#itinerary').scrollIntoView({ block: 'start' });
+function initPanels() {
+  const panels = [...document.querySelectorAll('[data-panel]')];
+  if (!panels.length) return;
+  const links = [...document.querySelectorAll('[data-panel-link]')];
+  function selectPanel() {
+    const hash = location.hash.slice(1);
+    const hotel = /^hotel-[1-7]$/.test(hash) ? document.getElementById(hash) : null;
+    const selected = hotel ? 'hotels' : panels.find((panel) => panel.id === hash)?.id ?? panels[0].id;
+    panels.forEach((panel) => { panel.hidden = panel.id !== selected; });
+    links.forEach((link) => {
+      if (link.dataset.panelLink === selected) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+    if (hotel) {
+      hotel.open = true;
+      requestAnimationFrame(() => hotel.scrollIntoView({ block: 'start' }));
+    }
+  }
+  window.addEventListener('hashchange', selectPanel);
+  selectPanel();
+}
+
+function initGuideFilter() {
+  if (page !== 'attractions') return;
+  const day = new URLSearchParams(location.search).get('day');
+  const selected = /^[456]$/.test(day ?? '') ? day : 'all';
+  document.querySelectorAll('[data-guide-filter]').forEach((link) => {
+    if (link.dataset.guideFilter === selected) link.setAttribute('aria-current', 'true');
+    else link.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('[data-guide-days]').forEach((card) => {
+    card.hidden = selected !== 'all' && !card.dataset.guideDays.split(',').includes(selected);
+    if (selected !== 'all') {
+      const link = card.querySelector('[data-guide-link]');
+      link.setAttribute('href', `${link.getAttribute('href')}?day=${selected}`);
+    }
+  });
+  document.querySelectorAll('[data-plan-day]').forEach((plan) => {
+    plan.hidden = selected !== 'all' && plan.dataset.planDay !== selected;
+    plan.open = selected !== 'all' && plan.dataset.planDay === selected;
   });
 }
-window.addEventListener('hashchange', () => {
-  const day = dayFromHash(location.hash);
-  if (day) renderDay(day);
-  revealGuide(location.hash);
-});
 
-$('#overview-rows').innerHTML = days.map((day) => `<tr><td>${day.date}<small>D${day.id} · ${day.weekday}</small></td><td><button type="button" data-day="${day.id}" aria-label="查看 ${day.date} ${escape(day.short)} 的安排">${escape(day.short)}</button></td><td>${day.distance.join('—')} km${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</td><td>${escape(day.stay)}${day.stayStatus ? `<small>${escape(day.stayStatus)} · ${escape(day.stayNote)}</small>` : ''}</td></tr>`).join('');
-$('#overview-rows').addEventListener('click', (event) => {
-  const button = event.target.closest('[data-day]');
-  if (!button) return;
-  renderDay(Number(button.dataset.day), { updateHash: true });
-  $('#itinerary').scrollIntoView({ block: 'start' });
-});
-$('#hotel-charging-date').textContent = `公开页面查询：${hotelChargingCheckedAt}`;
-$('#hotel-charging-rows').innerHTML = hotelCharging.map((item) => {
-  const day = days.find(({ id }) => id === item.day);
-  return `<tr><td>${day.date}</td><td><strong>${escape(day.stay)}</strong><span class="charging-status ${escape(item.tone)}">${escape(item.status)}</span><p>${escape(item.evidence)}</p><div class="charging-sources">${sourceLinks(item.sources)}</div></td><td><p>${escape(item.plan)}</p><p class="charging-fallback"><strong>备用：</strong>${escape(item.fallback)}</p><a class="backup-link" href="${escape(mapUrl(item.backupQuery, item.city))}" target="_blank" rel="noopener noreferrer">搜索备用充电位置 ↗</a></td></tr>`;
-}).join('');
-$('#station-list').innerHTML = stations.map(([area, name, source, note, city]) => `<article class="station-card"><div class="station-top"><span>${escape(area)}</span><span>${escape(source)} · 待确认</span></div><h3>${escape(name)}</h3><p>${escape(note)}</p><a href="${escape(mapUrl(name, city))}" target="_blank" rel="noopener noreferrer" aria-label="在高德搜索 ${escape(name)}">在高德搜索 ↗</a></article>`).join('');
-$('#prep-list').innerHTML = preparations.map(([title, when, text]) => `<li><div><h4>${escape(title)}<span>${escape(when)}</span></h4><p>${escape(text)}</p></div></li>`).join('');
-renderDay(selectedDay);
-revealGuide(location.hash);
+if (initNavigation()) {
+  initPanels();
+  initGuideFilter();
+}

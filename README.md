@@ -6,14 +6,16 @@
 
 ## 网页内容
 
-- 八天行程切换，键盘方向键 / Home / End 可选择日期，支持 `#day-4` 等日期直达链接。
+- 五个独立入口：路线总览、每日行程、景点攻略、住宿补电、行前准备。
+- 八天分别提供 `day-1.html` 至 `day-8.html` 详情页，支持日期菜单、前后一天与返回八日目录。
 - 全程路线示意、每日时间安排、住宿、补电节奏与条件变化时的备选建议。
 - 景点和充电站点的高德关键词搜索入口。
 - 核心景点攻略：白狼峰、三潭峡、地池、驼峰岭天池、杜鹃湖、蘑阿公路、同心天池与十大湾，附建议时长、体力安排、游览顺序、拍照建议、删减条件与来源。
-- 10/2—10/4 的游览取舍、景区换乘及取车提醒；每日安排可直接跳转并展开对应攻略，支持 `#guide-tuofeng` 等直达链接。
-- 七晚酒店充电设施核对表：区分店内桩、附近桩、页面仅列设施和未确认情况，附来源、查询日期、住宿补电与备用方案。
+- 八处景点分别提供 `guide-*.html` 攻略页。目录支持按 10/2—10/4 筛选；从某天进入攻略，可返回当天。旧版 `#day-4`、`#guide-tuofeng` 等链接仍会转到对应新页面。
+- 七晚酒店改为可展开卡片：区分店内桩、附近桩、页面仅列设施和未确认情况，附来源、查询日期与备用方案；沿途站点和补电原则分栏切换。
 - 原方案的票价参考、天气快照、行前确认与装备清单。
-- 手机、平板和桌面布局；不依赖外部字体、前端框架或地图 API Key。
+- 手机底部五项导航、顶部返回与菜单、4×2 日期入口、可折叠路线图、安全区留白；没有需要横向拖动的表格。桌面保留顶部导航与双栏详情。
+- 21 个页面的正文均为静态 HTML，无需 JavaScript 也能阅读和跳转；不依赖外部字体、前端框架或地图 API Key。
 
 数据忠实于提供的行程及后续住宿补充。已选酒店已写入每日安排、住宿总表和高德搜索入口；“已选”不表示网站核验过预订或充电设施。里程不是导航实时结果，票价、天气、路况和充电状态都未实时同步，路线图为非等比例示意图。
 
@@ -23,17 +25,18 @@
 
 ## 文件与预览
 
-`docs/` 是完整、无需构建的静态网站。通过 HTTP 访问（ES modules 不支持直接用 `file://` 打开）：
+`docs/` 是已生成的完整静态网站，可直接通过 HTTP 预览：
 
 ```sh
 python3 -m http.server 4173 --directory docs
 ```
 
-打开 http://localhost:4173。`docs/trip-data.mjs` 维护日期、行程、住宿、补电站和行前确认事项，其中 `hotelCharging` 与 `hotelChargingCheckedAt` 维护酒店充电证据、计划、来源及查询日期；`docs/app.mjs` 渲染交互；`docs/index.html` 和 `docs/styles.css` 维护布局和其余旅行内容。
+打开 http://localhost:4173。`docs/trip-data.mjs` 维护日期、行程、住宿、补电站和行前确认事项，其中 `hotelCharging` 与 `hotelChargingCheckedAt` 维护酒店充电证据。`src/pages.mjs` 和 `src/*.html` 维护页面模板，`docs/styles.css` 维护样式；`docs/app.mjs` 负责菜单、分类切换和返回上下文，`docs/navigation.mjs` 维护导航与旧链接兼容。请修改模板和数据后重新生成，不直接编辑生成的 HTML。
 
-验证入口、资源、脚本、路线数据和链接格式：
+生成页面并验证跨页链接、返回地址、资源、脚本及路线数据：
 
 ```sh
+node scripts/build.mjs
 node scripts/validate.mjs
 ```
 
@@ -43,7 +46,7 @@ node scripts/validate.mjs
 
 ## GitHub Pages
 
-在仓库 Settings → Pages 中选择 GitHub Actions。`.github/workflows/pages.yml` 在推送 `main` 时验证并发布 `docs/`，不需要安装项目依赖。页面所有本地资源使用相对路径，兼容 `/route_weaver/` 项目子目录。
+在仓库 Settings → Pages 中选择 GitHub Actions。`.github/workflows/pages.yml` 在推送 `main` 时生成、验证并发布 `docs/`，不需要安装项目依赖。所有页面都是实际 HTML 文件，可独立打开或刷新；本地资源使用相对路径，兼容 `/route_weaver/` 项目子目录。
 
 工作流参考 [GitHub 官方 Pages 文档](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages)；地图搜索使用 [高德 URI API](https://developer.amap.com/api/uri-api/guide/search/search)。
 
