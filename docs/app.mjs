@@ -22,7 +22,7 @@ function renderDay(id, { updateHash = false, focusTab = false } = {}) {
     <div class="summary-content">
       <div class="summary-top"><span class="day-badge">DAY ${String(id).padStart(2, '0')} / ${day.date}</span><span class="pill ${day.type}">${escape(day.tag)}</span></div>
       <h3>${escape(day.title)}</h3><p>${escape(day.intro)}</p>
-      <div class="summary-facts"><div><span>预计自驾</span><strong>${day.distance.join('—')} 公里</strong>${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</div><div><span>${id === 8 ? '目的地' : '今晚住在'}</span><strong>${escape(day.stay)}</strong></div></div>
+      <div class="summary-facts"><div><span>${id === 4 || id === 5 ? '原方案参考里程' : '预计自驾'}</span><strong>${day.distance.join('—')} 公里</strong>${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</div><div><span>${id === 8 ? '目的地' : `今晚住宿 · ${escape(day.stayStatus)}`}</span><strong>${escape(day.stay)}</strong>${day.stayNote ? `<small>${escape(day.stayNote)}</small>` : ''}</div></div>
       <a class="view-day-link" href="#itinerary">查看当天具体安排 <span aria-hidden="true">↓</span></a>
     </div>
     <figure class="day-photo"><img src="./assets/autumn-forest.jpg" alt="大兴安岭根河一带的金色秋林与粉色暮空，作为区域秋色参考" width="1400" height="933"><figcaption><span>大兴安岭 · 根河秋色参考</span><a href="./credits.html" target="_blank" rel="noopener noreferrer" aria-label="查看照片作者和许可">图片来源 ↗</a></figcaption></figure>`;
@@ -62,7 +62,7 @@ window.addEventListener('hashchange', () => {
   if (day) renderDay(day);
 });
 
-$('#overview-rows').innerHTML = days.map((day) => `<tr><td>${day.date}<small>D${day.id} · ${day.weekday}</small></td><td><button type="button" data-day="${day.id}" aria-label="查看 ${day.date} ${escape(day.short)} 的安排">${escape(day.short)}</button></td><td>${day.distance.join('—')} km${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</td><td>${escape(day.stay)}</td></tr>`).join('');
+$('#overview-rows').innerHTML = days.map((day) => `<tr><td>${day.date}<small>D${day.id} · ${day.weekday}</small></td><td><button type="button" data-day="${day.id}" aria-label="查看 ${day.date} ${escape(day.short)} 的安排">${escape(day.short)}</button></td><td>${day.distance.join('—')} km${day.extra ? `<small>${escape(day.extra)}</small>` : ''}</td><td>${escape(day.stay)}${day.stayStatus ? `<small>${escape(day.stayStatus)} · ${escape(day.stayNote)}</small>` : ''}</td></tr>`).join('');
 $('#overview-rows').addEventListener('click', (event) => {
   const button = event.target.closest('[data-day]');
   if (!button) return;
